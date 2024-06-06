@@ -14,12 +14,12 @@ env:
   DOTNET_WORKING_DIRECTORY: src/dotnet/AZ-Fn-Graph
   DOTNET_VERSION: "8.0"
 
-  APPLICATION_NAME: "aztf-graph"
-  ENVIRONMENT_NAME: "test"
+  APPLICATION_NAME: "GraphApp"
+  ENVIRONMENT_NAME: "Test"
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
-    
+
   
