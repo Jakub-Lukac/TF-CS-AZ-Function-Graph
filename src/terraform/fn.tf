@@ -30,7 +30,7 @@ resource "azurerm_windows_function_app" "fn" {
 
   # managed identity set to system assigned
   identity {
-    type = "SystemAssigned, UserAssigned"
+    type         = "SystemAssigned, UserAssigned"
     identity_ids = [azurerm_user_assigned_identity.functions.id]
   }
 
@@ -70,6 +70,7 @@ resource "azurerm_windows_function_app" "fn" {
   } */
 
   app_settings = {
+    "WEBSITE_RUN_FROM_PACKAGE"       = 1
     "CONF_APP_ID"                    = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.fnkv.name};SecretName=${azurerm_key_vault_secret.app_conf_app_id.name})",
     "CONF_APP_SECRET"                = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.fnkv.name};SecretName=${azurerm_key_vault_secret.app_conf_app_secret.name})",
     "CONF_TENANT_ID"                 = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.fnkv.name};SecretName=${azurerm_key_vault_secret.app_conf_tenant_id.name})",
