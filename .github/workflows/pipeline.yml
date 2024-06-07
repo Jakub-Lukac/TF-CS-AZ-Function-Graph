@@ -30,22 +30,41 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Install Dependencies
-        run : dotnet restore
+        run: dotnet restore
         working-directory: ${{ env.DOTNET_WORKING_DIRECTORY }}
 
       - name: Build
-        run : dotnet build --configuration Release --no-restore
+        run: dotnet build --configuration Release --no-restore
         working-directory: ${{ env.DOTNET_WORKING_DIRECTORY }}
+
+      - name: Publish
+        run: dotnet publish ./AZ-Fn-Graph.csproj -c Release -o ./publish
+        working-directory: ${{ env.DOTNET_WORKING_DIRECTORY }}
+
+      - name: Generate Deployment Package
+        run: |
+          zip -r ../deployment.zip ./
+        working-directory: ${{ env.DOTNET_WORKING_DIRECTORY }}/publish
+
+      - name: Upload Deployment Package
+        uses: actions/upload-artifact@v2
+        with:
+          name: function-deployment
+          path: ${{ env.DOTNET_WORKING_DIRECTORY }}/deployment.zip
 
   terraform:
     runs-on: ubuntu-latest
+
+    outputs:
+      resource_group_name: ${{ steps.apply.outputs.resource_group_name }}
+      function_name: ${{ steps.apply.outputs.function_name }}
 
     steps:
       - uses: actions/checkout@v3
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
-        with: 
+        with:
           terraform_version: 1.8.1
           terraform_wrapper: false
 
@@ -72,22 +91,46 @@ jobs:
           TF_VAR_environment_name: ${{ env.ENVIRONMENT_NAME }}
         working-directory: ${{ env.TERRAFORM_WORKING_DIRECTORY }}
         run: |
-           terraform init \
-            -backend-config="resource_group_name=$BACKEND_RESOURCE_GROUP_NAME" \
-            -backend-config="storage_account_name=$BACKEND_STORAGE_ACCOUNT_NAME" \
-            -backend-config="container_name=$BACKEND_STORAGE_CONTAINER_NAME" \
-            -backend-config="key=$TF_BACKEND_KEY" \
-            -backend-config="access_key"=$BACKEND_ACCESS_KEY
+          terraform init \
+           -backend-config="resource_group_name=$BACKEND_RESOURCE_GROUP_NAME" \
+           -backend-config="storage_account_name=$BACKEND_STORAGE_ACCOUNT_NAME" \
+           -backend-config="container_name=$BACKEND_STORAGE_CONTAINER_NAME" \
+           -backend-config="key=$TF_BACKEND_KEY" \
+           -backend-config="access_key"=$BACKEND_ACCESS_KEY
 
-            terraform validate
+           terraform validate
 
-            terraform workspace select customer
+           terraform workspace select customer
 
-            terraform plan -out="plan_customer.out" 
-            terraform apply "plan_customer.out"
-        
+           terraform plan -out="plan_customer.out" 
+           terraform apply "plan_customer.out"
 
+           resource_group_name=$(terraform output -raw resource_group_name)
+           function_name=$(terraform output -raw function_name)
 
+           echo "resource_group_name=${resource_group_name}" >> $GITHUB_OUTPUT
+           echo "function_name=${function_name}" >> $GITHUB_OUTPUT
 
+  deploy:
+    needs: [terraform, build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
 
-  
+      - uses: actions/download-artifact@v3
+        with:
+          name: function-deployment
+
+      - name: Deploy
+        env:
+          ARM_CLIENT_ID: ${{ vars.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+          ARM_TENANT_ID: ${{ vars.ARM_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ vars.ARM_SUBSCRIPTION_ID }}
+
+          RESOURCE_GROUP_NAME: ${{needs.terraform.outputs.resource_group_name}}
+          FUNCTION_NAME: ${{needs.terraform.outputs.function_name}}
+        run: |
+          az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET --tenant $ARM_TENANT_ID --output none
+          az account set -s $ARM_SUBSCRIPTION_ID --output none
+          az functionapp deployment source config-zip -g $RESOURCE_GROUP_NAME -n $FUNCTION_NAME --src ./deployment.zip
