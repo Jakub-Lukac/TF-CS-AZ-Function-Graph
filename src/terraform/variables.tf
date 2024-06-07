@@ -40,8 +40,8 @@ variable "resource_group_suffix" {
   default = "RG"
 }
 
-variable "function_storage_acc_suffix" {
+variable "function_storage_acc_name" {
   type = string
-  default = "FnSt"
+  default = "graphapptestfnst"
 }
 
