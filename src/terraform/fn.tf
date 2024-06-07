@@ -24,7 +24,8 @@ resource "azurerm_windows_function_app" "fn" {
 
   # managed identity set to system assigned
   identity {
-    type = "SystemAssigned"
+    type = "SystemAssigned, UserAssigned"
+    identity_ids = [azurerm_user_assigned_identity.functions.id]
   }
 
 
@@ -38,6 +39,7 @@ resource "azurerm_windows_function_app" "fn" {
         "https://portal.azure.com",
         "https://${var.application_name}-${var.environment_name}-${var.service_plan_suffix}.azurewebsites.net"
       ]
+      support_credentials = true
     }
   }
 
