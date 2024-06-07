@@ -1,3 +1,9 @@
+resource "azurerm_user_assigned_identity" "functions" {
+  location            = azurerm_resource_group.main.location
+  name                = "mi-${var.application_name}-${var.environment_name}-${var.fn_suffix}"
+  resource_group_name = azurerm_resource_group.main.name
+}
+
 resource "azurerm_service_plan" "fn_sp" {
   name                = "${var.application_name}-${var.environment_name}-${var.service_plan_suffix}"
   resource_group_name = azurerm_resource_group.main.name
