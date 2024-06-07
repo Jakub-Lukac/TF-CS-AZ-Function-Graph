@@ -31,17 +31,37 @@ variable "environment_name" {
 }
 
 variable "resource_group_location" {
-  type = string
+  type    = string
   default = "West Europe"
 }
 
 variable "resource_group_suffix" {
-  type = string
+  type    = string
   default = "RG"
 }
 
-variable "function_storage_acc_name" {
+variable "service_plan_suffix" {
+  type    = string
+  default = "FnSp"
+}
+
+variable "fn_suffix" {
+  type    = string
+  default = "Fn"
+}
+
+variable "keyvault_suffix" {
+  type    = string
+  default = "FnKv"
+}
+
+variable "app-insights-suffix" {
   type = string
+  default = "App-Insights"
+}
+
+variable "function_storage_acc_name" {
+  type    = string
   default = "graphapptestfnst"
 }
 
