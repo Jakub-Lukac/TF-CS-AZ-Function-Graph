@@ -44,7 +44,7 @@ resource "azuread_service_principal" "app_principal" {
 }
 
 resource "azuread_application_password" "example" {
-  application_id = azuread_application.app.object_id
+  application_id = azuread_application.app.application_id
   display_name   = "Secret for ${azuread_application.app.display_name} App"
 }
 
