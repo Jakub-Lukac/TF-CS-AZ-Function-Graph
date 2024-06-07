@@ -41,7 +41,7 @@ resource "azurerm_windows_function_app" "fn" {
     }
   }
 
-  auth_settings_v2 {
+  /* auth_settings_v2 {
     auth_enabled           = true
     require_authentication = true
     default_provider       = "AzureActiveDirectory"
@@ -59,7 +59,7 @@ resource "azurerm_windows_function_app" "fn" {
     login {
       token_store_enabled = true
     }
-  }
+  } */
 
   app_settings = {
     "CONF_APP_ID"                    = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.fnkv.name};SecretName=${azurerm_key_vault_secret.app_conf_app_id.name})",
