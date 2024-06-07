@@ -51,6 +51,12 @@ resource "azurerm_key_vault_access_policy" "akv_fn_policy" {
   # object id?? - Andrej sa spytat
   object_id    = azurerm_windows_function_app.fn.identity[0].principal_id
 
+  lifecycle {
+    ignore_changes = [
+      tags
+    ]
+  }
+
   secret_permissions = [
     "Get",
     "List"
