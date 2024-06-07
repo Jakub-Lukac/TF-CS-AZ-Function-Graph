@@ -21,5 +21,70 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup .NET CORE
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Install Dependencies
+        run : dotnet restore
+        working-directory: ${{ env.DOTNET_WORKING_DIRECTORY }}
+
+      - name: Build
+        run : dotnet build --configuration Release --no-restore
+        working-directory: ${{ env.DOTNET_WORKING_DIRECTORY }}
+
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with: 
+          terraform_version: 1.8.1
+          terraform_wrapper: false
+
+      - name: Azure CLI Login
+        env:
+          ARM_CLIENT_ID: ${{ vars.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+          ARM_TENANT_ID: ${{ vars.ARM_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ vars.ARM_SUBSCRIPTION_ID }}
+        run: |
+          az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET --tenant $ARM_TENANT_ID --output none
+          az account set -s $ARM_SUBSCRIPTION_ID --output none
+
+      - id: apply
+        name: Terraform Backend Configuration and Apply
+        env:
+          BACKEND_RESOURCE_GROUP_NAME: ${{vars.BACKEND_RESOURCE_GROUP_NAME}}
+          BACKEND_STORAGE_ACCOUNT_NAME: ${{vars.BACKEND_STORAGE_ACCOUNT_NAME}}
+          BACKEND_STORAGE_CONTAINER_NAME: ${{vars.BACKEND_STORAGE_CONTAINER_NAME}}
+          TF_BACKEND_KEY: ${{ vars.TF_BACKEND_KEY }}
+          BACKEND_ACCESS_KEY: ${{ secrets.BACKEND_ACCESS_KEY }}
+        working-directory: ${{ env.TERRAFORM_WORKING_DIRECTORY }}
+        run: |
+           terraform init \
+            -backend-config="resource_group_name=$BACKEND_RESOURCE_GROUP_NAME" \
+            -backend-config="storage_account_name=$BACKEND_STORAGE_ACCOUNT_NAME" \
+            -backend-config="container_name=$BACKEND_STORAGE_CONTAINER_NAME" \
+            -backend-config="key=$TF_BACKEND_KEY" \
+            -backend-config="access_key"=$BACKEND_ACCESS_KEY
+
+            terraform validate
+
+            terraform workspace select customer
+
+            terraform plan -out="plan_customer.out" 
+            terraform apply "plan_customer.out"
+        
+
+
+
 
   
