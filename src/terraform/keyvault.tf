@@ -5,26 +5,6 @@ resource "azurerm_key_vault" "fnkv" {
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
   # enable_rbac_authorization = true
-
-  lifecycle {
-    ignore_changes = [
-      tags
-    ]
-  }
-
-  # policy for terraform AD application
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = data.azurerm_client_config.current.object_id
-
-    secret_permissions = [
-      "Set",
-      "Get",
-      "List",
-      "Delete",
-      "Purge"
-    ]
-  }
 }
 
 resource "azurerm_key_vault_secret" "app_conf_app_id" {
@@ -45,15 +25,24 @@ resource "azurerm_key_vault_secret" "app_conf_tenant_id" {
   key_vault_id = azurerm_key_vault.fnkv.id
 }
 
+resource "azurerm_key_vault_access_policy" "fnkv_policy" {
+  key_vault_id = azurerm_key_vault.fnkv.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = data.azurerm_client_config.current.object_id
+
+  secret_permissions = [
+    "Set",
+    "Get",
+    "List",
+    "Delete",
+    "Purge"
+  ]
+}
+
 resource "azurerm_key_vault_access_policy" "akv_fn_policy" {
   key_vault_id = azurerm_key_vault.fnkv.id
   tenant_id    = data.azurerm_client_config.current.tenant_id
-  # object id?? - Andrej sa spytat
   object_id    = azurerm_windows_function_app.fn.identity[0].principal_id
-
-  lifecycle {
-    ignore_changes = all
-  }
 
   secret_permissions = [
     "Get",
