@@ -40,3 +40,8 @@ variable "resource_group_suffix" {
   default = "RG"
 }
 
+variable "function_storage_acc_suffix" {
+  type = string
+  default = "FnSt"
+}
+
