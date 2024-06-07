@@ -52,9 +52,7 @@ resource "azurerm_key_vault_access_policy" "akv_fn_policy" {
   object_id    = azurerm_windows_function_app.fn.identity[0].principal_id
 
   lifecycle {
-    ignore_changes = [
-      tags
-    ]
+    ignore_changes = all
   }
 
   secret_permissions = [
