@@ -12,7 +12,7 @@ resource "azurerm_resource_group" "main" {
 }
 
 resource "azurerm_storage_account" "fn_st" {
-  name                     = "${var.application_name}-${var.environment_name}-${var.function_storage_acc_suffix}"
+  name                     = "${var.application_name}${var.environment_name}${var.function_storage_acc_suffix}"
   resource_group_name      = azurerm_resource_group.main.name
   location                 = azurerm_resource_group.main.location
   account_tier             = "Standard"
