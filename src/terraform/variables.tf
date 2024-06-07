@@ -31,6 +31,12 @@ variable "environment_name" {
 }
 
 variable "resource_group_location" {
+  type = string
   default = "West Europe"
+}
+
+variable "resource_group_suffix" {
+  type = string
+  default = "RG"
 }
 
