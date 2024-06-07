@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34616.47
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AZ-Fn-Graph", "AZ-Fn-Graph.csproj", "{569EBC42-42A8-4310-B0D1-D32EDD9C0BCE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AZ-Fn-Graph", "AZ-Fn-Graph.csproj", "{C8F5611C-BB97-4448-837A-FA7A6FE28B27}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{569EBC42-42A8-4310-B0D1-D32EDD9C0BCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{569EBC42-42A8-4310-B0D1-D32EDD9C0BCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{569EBC42-42A8-4310-B0D1-D32EDD9C0BCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{569EBC42-42A8-4310-B0D1-D32EDD9C0BCE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8F5611C-BB97-4448-837A-FA7A6FE28B27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8F5611C-BB97-4448-837A-FA7A6FE28B27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8F5611C-BB97-4448-837A-FA7A6FE28B27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8F5611C-BB97-4448-837A-FA7A6FE28B27}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {32D6E888-FD7C-44BF-8C0A-2E3776B6E14B}
+		SolutionGuid = {DC2B63E4-2AD9-4EB4-9BF4-355244360EA7}
 	EndGlobalSection
 EndGlobal

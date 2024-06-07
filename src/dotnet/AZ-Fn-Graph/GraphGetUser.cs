@@ -19,30 +19,17 @@ namespace AZ_Fn_Graph
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            try
-            {
-                string name = req.Query["name"];
-                log.LogInformation($"Name from query: {name}");
+            string name = req.Query["name"];
 
-                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-                log.LogInformation($"Request Body: {requestBody}");
+            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            dynamic data = JsonConvert.DeserializeObject(requestBody);
+            name = name ?? data?.name;
 
-                dynamic data = JsonConvert.DeserializeObject(requestBody);
-                name = name ?? data?.name;
-                log.LogInformation($"Name after body processing: {name}");
+            string responseMessage = string.IsNullOrEmpty(name)
+                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
+                : $"Hello, {name}. This HTTP triggered function executed successfully.";
 
-                string responseMessage = string.IsNullOrEmpty(name)
-                    ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                    : $"Hello, {name}. This HTTP triggered function executed successfully.";
-
-                log.LogInformation("Function executed successfully.");
-                return new OkObjectResult(responseMessage);
-            }
-            catch (Exception ex)
-            {
-                log.LogError($"An error occurred: {ex.Message}");
-                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
-            }
+            return new OkObjectResult(responseMessage);
         }
     }
 }
