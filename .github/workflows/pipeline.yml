@@ -78,6 +78,7 @@ jobs:
 
             terraform validate
 
+            terraform workspace create customer
             terraform workspace select customer
 
             terraform plan -out="plan_customer.out" 
