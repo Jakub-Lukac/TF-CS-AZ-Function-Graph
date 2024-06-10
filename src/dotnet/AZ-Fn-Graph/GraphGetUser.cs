@@ -28,11 +28,11 @@ namespace AZ_Fn_Graph
         {
             _logger.LogInformation($"C# HTTP trigger function processed a request");
 
-            var parameters = new ParameterObjectBody();
+            /*var parameters = new ParameterObjectBody();
 
             var graphClient = _code.GetAuthenticatedGraphClient(parameters.appId, parameters.appSecret, parameters.tenantId);
 
-            var user = await _code.GetUser(graphClient, "2fe83868-254d-4787-ad17-00dbd91357b4");
+            var user = await _code.GetUser(graphClient, "2fe83868-254d-4787-ad17-00dbd91357b4");*/
             //var users = await _code.GetUsers(graphClient);
 
             /*StringBuilder responseMessage = new StringBuilder();
@@ -42,7 +42,9 @@ namespace AZ_Fn_Graph
                 responseMessage.AppendLine(user.DisplayName);
             }*/
 
-            return new OkObjectResult(user.DisplayName);
+            string appId = Environment.GetEnvironmentVariable("CONF_APP_ID");
+
+            return new OkObjectResult(appId);
         }
     }
 }
