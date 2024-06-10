@@ -21,13 +21,20 @@ namespace AZ_Fn_Graph
 
             string name = req.Query["name"];
 
+            string confAppId = Environment.GetEnvironmentVariable("CONF_APP_ID");
+            string confAppSecret = Environment.GetEnvironmentVariable("CONF_APP_SECRET");
+            string confTenantId = Environment.GetEnvironmentVariable("CONF_TENANT_ID");
+            string appInsightsKey = Environment.GetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY");
+
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
             name = name ?? data?.name;
 
-            string responseMessage = string.IsNullOrEmpty(name)
+            /*string responseMessage = string.IsNullOrEmpty(name)
                 ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
+                : $"Hello, {name}. This HTTP triggered function executed successfully.";*/
+
+            string responseMessage = $"CONF TENANT ID : {confTenantId}";
 
             return new OkObjectResult(responseMessage);
         }
