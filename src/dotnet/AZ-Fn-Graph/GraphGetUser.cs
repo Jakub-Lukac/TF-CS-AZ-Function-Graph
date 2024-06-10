@@ -14,7 +14,7 @@ namespace AZ_Fn_Graph
     {
         [FunctionName("GraphGetUser")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "default")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "default")] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");

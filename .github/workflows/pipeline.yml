@@ -79,7 +79,7 @@ jobs:
           az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET --tenant $ARM_TENANT_ID --output none
           az account set -s $ARM_SUBSCRIPTION_ID --output none
 
-      - name: Terraform Backend Configuration and Apply
+      - name: Terraform Backend Initialization
         env:
           BACKEND_RESOURCE_GROUP_NAME: ${{vars.BACKEND_RESOURCE_GROUP_NAME}}
           BACKEND_STORAGE_ACCOUNT_NAME: ${{vars.BACKEND_STORAGE_ACCOUNT_NAME}}
@@ -94,18 +94,19 @@ jobs:
            -backend-config="container_name=$BACKEND_STORAGE_CONTAINER_NAME" \
            -backend-config="key=$TF_BACKEND_KEY" \
            -backend-config="access_key"=$BACKEND_ACCESS_KEY
-      
+
       - name: Terraform Validate
+        # ensures that terraform validate runs regardless of the success or failure of the previous step
         if: success() || failure()
         run: terraform validate
         working-directory: ${{ env.TERRAFORM_WORKING_DIRECTORY }}
-      
+
       - name: Terraform Workspace
         run: terraform workspace select customer
         working-directory: ${{ env.TERRAFORM_WORKING_DIRECTORY }}
-      
+
       - name: Terraform Plan and Apply
-        env: 
+        env:
           TF_VAR_application_name: ${{ env.APPLICATION_NAME }}
           TF_VAR_environment_name: ${{ env.ENVIRONMENT_NAME }}
         run: |
@@ -116,13 +117,13 @@ jobs:
       - id: var
         name: Terraform TF_VARs Initialization
         run: |
-           resource_group_name=$(terraform output -raw resource_group_name)
-           function_name=$(terraform output -raw function_name)
+          resource_group_name=$(terraform output -raw resource_group_name)
+          function_name=$(terraform output -raw function_name)
 
-           echo "resource_group_name=${resource_group_name}" >> $GITHUB_OUTPUT
-           echo "function_name=${function_name}" >> $GITHUB_OUTPUT
+          echo "resource_group_name=${resource_group_name}" >> $GITHUB_OUTPUT
+          echo "function_name=${function_name}" >> $GITHUB_OUTPUT
         working-directory: ${{ env.TERRAFORM_WORKING_DIRECTORY }}
-          
+
   deploy:
     needs: [terraform, build]
     runs-on: ubuntu-latest
