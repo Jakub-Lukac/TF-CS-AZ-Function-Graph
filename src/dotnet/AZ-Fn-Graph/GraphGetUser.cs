@@ -14,7 +14,7 @@ namespace AZ_Fn_Graph
 {
     public class GraphGetUser
     {
-        private readonly ILogger<GraphGetUser> _logger;
+        private readonly ILogger _logger;
         private readonly Code _code;
 
         public GraphGetUser(ILogger<GraphGetUser> logger, Code code)
@@ -26,9 +26,7 @@ namespace AZ_Fn_Graph
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "default")] HttpRequest req)
         {
-            DateTime messageDate = DateTime.UtcNow;
-
-            _logger.LogInformation($"C# HTTP trigger function processed a request at {messageDate}");
+            _logger.LogInformation($"C# HTTP trigger function processed a request");
 
             var parameters = new ParameterObjectBody();
 
@@ -36,14 +34,14 @@ namespace AZ_Fn_Graph
 
             var users = await _code.GetUsers(graphClient);
 
-            StringBuilder responseMessage = new StringBuilder();
+            /*StringBuilder responseMessage = new StringBuilder();
 
             foreach ( var user in users) 
             {
                 responseMessage.AppendLine(user.DisplayName);
-            }
+            }*/
 
-            return new OkObjectResult(responseMessage);
+            return new OkObjectResult("Okej");
         }
     }
 }
