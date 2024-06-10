@@ -12,21 +12,21 @@ using System.Text;
 
 namespace AZ_Fn_Graph
 {
-    public class GraphGetUser
+    public static class GraphGetUser
     {
-        private readonly ILogger _logger;
+        /*private readonly ILogger _logger;
         private readonly Code _code;
 
         public GraphGetUser(ILogger<GraphGetUser> logger, Code code)
         {
             _logger = logger;
             _code = code;
-        }
+        }*/
         [FunctionName("GraphGetUser")]
-        public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "default")] HttpRequest req)
+        public static async Task<IActionResult> Run(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "default")] HttpRequest req, ILogger log)
         {
-            _logger.LogInformation($"C# HTTP trigger function processed a request");
+            log.LogInformation($"C# HTTP trigger function processed a request");
 
             /*var parameters = new ParameterObjectBody();
 
