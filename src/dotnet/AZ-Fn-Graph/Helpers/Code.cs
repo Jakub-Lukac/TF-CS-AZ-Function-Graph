@@ -37,10 +37,12 @@ namespace AZ_Fn_Graph.Helpers
                     requestConfiguration.QueryParameters.Top = 10;
                     requestConfiguration.QueryParameters.Select = new string[] { "displayName" };
                 });
-                
-                users = users.Union(usersResult.Value.Where(w => w.GetType() == typeof(User)).OrderBy(o => o.Id).Select(s => s as User).ToList()).ToList();
 
-                /*var nextPageLink = usersResult.OdataNextLink;
+                users = usersResult.Value;
+                
+                /*users = users.Union(usersResult.Value.Where(w => w.GetType() == typeof(User)).OrderBy(o => o.Id).Select(s => s as User).ToList()).ToList();
+
+                var nextPageLink = usersResult.OdataNextLink;
                 while (nextPageLink != null)
                 {
                     var nextPageRequestInformation = new RequestInformation
