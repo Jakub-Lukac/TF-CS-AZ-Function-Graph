@@ -56,8 +56,8 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      resource_group_name: ${{ steps.apply.outputs.resource_group_name }}
-      function_name: ${{ steps.apply.outputs.function_name }}
+      resource_group_name: ${{ steps.var.outputs.resource_group_name }}
+      function_name: ${{ steps.var.outputs.function_name }}
 
     steps:
       - uses: actions/checkout@v3
@@ -68,6 +68,7 @@ jobs:
           terraform_version: 1.8.1
           terraform_wrapper: false
 
+      # logging in through the service principal credentials
       - name: Azure CLI Login
         env:
           ARM_CLIENT_ID: ${{ vars.ARM_CLIENT_ID }}
@@ -78,17 +79,13 @@ jobs:
           az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET --tenant $ARM_TENANT_ID --output none
           az account set -s $ARM_SUBSCRIPTION_ID --output none
 
-      - id: apply
-        name: Terraform Backend Configuration and Apply
+      - name: Terraform Backend Configuration and Apply
         env:
           BACKEND_RESOURCE_GROUP_NAME: ${{vars.BACKEND_RESOURCE_GROUP_NAME}}
           BACKEND_STORAGE_ACCOUNT_NAME: ${{vars.BACKEND_STORAGE_ACCOUNT_NAME}}
           BACKEND_STORAGE_CONTAINER_NAME: ${{vars.BACKEND_STORAGE_CONTAINER_NAME}}
           TF_BACKEND_KEY: ${{ vars.TF_BACKEND_KEY }}
           BACKEND_ACCESS_KEY: ${{ secrets.BACKEND_ACCESS_KEY }}
-
-          TF_VAR_application_name: ${{ env.APPLICATION_NAME }}
-          TF_VAR_environment_name: ${{ env.ENVIRONMENT_NAME }}
         working-directory: ${{ env.TERRAFORM_WORKING_DIRECTORY }}
         run: |
           terraform init \
@@ -97,20 +94,35 @@ jobs:
            -backend-config="container_name=$BACKEND_STORAGE_CONTAINER_NAME" \
            -backend-config="key=$TF_BACKEND_KEY" \
            -backend-config="access_key"=$BACKEND_ACCESS_KEY
+      
+      - name: Terraform Validate
+        if: success() || failure()
+        run: terraform validate
+        working-directory: ${{ env.TERRAFORM_WORKING_DIRECTORY }}
+      
+      - name: Terraform Workspace
+        run: terraform workspace select customer
+        working-directory: ${{ env.TERRAFORM_WORKING_DIRECTORY }}
+      
+      - name: Terraform Plan and Apply
+        env: 
+          TF_VAR_application_name: ${{ env.APPLICATION_NAME }}
+          TF_VAR_environment_name: ${{ env.ENVIRONMENT_NAME }}
+        run: |
+          terraform plan -out="plan_customer.out" 
+          terraform apply "plan_customer.out"
+        working-directory: ${{ env.TERRAFORM_WORKING_DIRECTORY }}
 
-           terraform validate
-
-           terraform workspace select customer
-
-           terraform plan -out="plan_customer.out" 
-           terraform apply "plan_customer.out"
-
+      - id: var
+        name: Terraform TF_VARs Initialization
+        run: |
            resource_group_name=$(terraform output -raw resource_group_name)
            function_name=$(terraform output -raw function_name)
 
            echo "resource_group_name=${resource_group_name}" >> $GITHUB_OUTPUT
            echo "function_name=${function_name}" >> $GITHUB_OUTPUT
-
+        working-directory: ${{ env.TERRAFORM_WORKING_DIRECTORY }}
+          
   deploy:
     needs: [terraform, build]
     runs-on: ubuntu-latest
