@@ -8,9 +8,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using AZ_Fn_Graph.Helpers;
-using Microsoft.Graph.Models;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 
 namespace AZ_Fn_Graph
 {
@@ -28,24 +25,20 @@ namespace AZ_Fn_Graph
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "default")] HttpRequest req)
         {
-            DateTime messageDate = DateTime.Now;
 
-            _logger.LogInformation($"C# Timer trigger function executed at: {messageDate}");
+            string confAppId = Environment.GetEnvironmentVariable("CONF_APP_ID");
+            string confAppSecret = Environment.GetEnvironmentVariable("CONF_APP_SECRET");
+            string confTenantId = Environment.GetEnvironmentVariable("CONF_TENANT_ID");
+            string appInsightsKey = Environment.GetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY");
 
-            /*var parameters = new ParameterObjectBody();
 
-            var graphClient = _code.GetAuthenticatedGraphClient(parameters.tenantId, parameters.appId, parameters.appSecret);
+            /*string responseMessage = string.IsNullOrEmpty(name)
+                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
+                : $"Hello, {name}. This HTTP triggered function executed successfully.";*/
 
-            var users = await _code.GetUsers(graphClient);
+            string responseMessage = $"CONF TENANT ID : {confTenantId}";
 
-            StringBuilder responseMessage = new StringBuilder();
-
-            foreach (var u in users)
-            {
-                responseMessage.AppendLine($"{u.DisplayName, -20}{u.Id}");
-            }*/
-
-            return new OkObjectResult(messageDate);
+            return new OkObjectResult(responseMessage);
         }
     }
 }
