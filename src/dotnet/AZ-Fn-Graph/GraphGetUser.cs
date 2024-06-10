@@ -32,7 +32,8 @@ namespace AZ_Fn_Graph
 
             var graphClient = _code.GetAuthenticatedGraphClient(parameters.appId, parameters.appSecret, parameters.tenantId);
 
-            var users = await _code.GetUsers(graphClient);
+            var user = await _code.GetUser(graphClient, "2fe83868-254d-4787-ad17-00dbd91357b4");
+            //var users = await _code.GetUsers(graphClient);
 
             /*StringBuilder responseMessage = new StringBuilder();
 
@@ -41,7 +42,7 @@ namespace AZ_Fn_Graph
                 responseMessage.AppendLine(user.DisplayName);
             }*/
 
-            return new OkObjectResult("Okej");
+            return new OkObjectResult(user.DisplayName);
         }
     }
 }

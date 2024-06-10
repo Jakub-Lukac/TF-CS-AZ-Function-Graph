@@ -64,5 +64,19 @@ namespace AZ_Fn_Graph.Helpers
                 return new List<User>();
             }
         }
+
+        public async Task<User> GetUser(GraphServiceClient graphServiceClient, string userID)
+        {
+            try
+            {
+                var result = await graphServiceClient.Users[userID].GetAsync();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return null;
+            }
+        }
     }
 }
