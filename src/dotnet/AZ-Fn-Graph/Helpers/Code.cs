@@ -34,13 +34,13 @@ namespace AZ_Fn_Graph.Helpers
             {
                 var usersResult = await graphServiceClient.Users.GetAsync((requestConfiguration) => 
                 {
-                    requestConfiguration.QueryParameters.Top = 999;
+                    requestConfiguration.QueryParameters.Top = 10;
                     requestConfiguration.QueryParameters.Select = new string[] { "displayName" };
                 });
                 
                 users = users.Union(usersResult.Value.Where(w => w.GetType() == typeof(User)).OrderBy(o => o.Id).Select(s => s as User).ToList()).ToList();
 
-                var nextPageLink = usersResult.OdataNextLink;
+                /*var nextPageLink = usersResult.OdataNextLink;
                 while (nextPageLink != null)
                 {
                     var nextPageRequestInformation = new RequestInformation
@@ -52,7 +52,7 @@ namespace AZ_Fn_Graph.Helpers
                     var nextPageResult = await graphServiceClient.RequestAdapter.SendAsync(nextPageRequestInformation, (parseNode) => new DirectoryObjectCollectionResponse());
                     users = users.Union(nextPageResult.Value.Where(w => w.GetType() == typeof(User)).OrderBy(o => o.Id).Select(s => s as User).ToList()).ToList();
                     nextPageLink = usersResult.OdataNextLink;
-                }
+                }*/
 
                 return users;
             }
