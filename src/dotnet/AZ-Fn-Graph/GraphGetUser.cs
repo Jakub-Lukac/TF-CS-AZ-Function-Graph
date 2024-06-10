@@ -32,7 +32,7 @@ namespace AZ_Fn_Graph
 
             _logger.LogInformation($"C# Timer trigger function executed at: {messageDate}");
 
-            var parameters = new ParameterObjectBody();
+            /*var parameters = new ParameterObjectBody();
 
             var graphClient = _code.GetAuthenticatedGraphClient(parameters.tenantId, parameters.appId, parameters.appSecret);
 
@@ -43,9 +43,9 @@ namespace AZ_Fn_Graph
             foreach (var u in users)
             {
                 responseMessage.AppendLine($"{u.DisplayName, -20}{u.Id}");
-            }
+            }*/
 
-            return new OkObjectResult(responseMessage);
+            return new OkObjectResult(messageDate);
         }
     }
 }
