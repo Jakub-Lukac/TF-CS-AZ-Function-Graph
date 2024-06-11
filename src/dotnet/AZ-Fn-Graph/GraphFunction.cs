@@ -7,11 +7,21 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using AZ_Fn_Graph.Helpers;
+using System.Diagnostics;
+using System.Reflection.Metadata;
 
 namespace AZ_Fn_Graph
 {
     public class GraphFunction
     {
+        private readonly Code _code;
+
+        public GraphFunction(Code code)
+        {
+            _code = code;
+        }
+
         [FunctionName("GraphFunction")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "default")] HttpRequest req,
@@ -19,17 +29,15 @@ namespace AZ_Fn_Graph
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            string name = req.Query["name"];
+            var parameters = new Model();
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
+            /*var graphClient = _code.GetAuthenticatedGraphClient(parameters.tenantId, parameters.appId, parameters.appSecret);
 
-            string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
+            var user = await _code.GetUser(graphClient, "92ace2a0-26a3-4432-8254-ea8217fc2d8e");*/
 
-            return new OkObjectResult(responseMessage);
+
+
+            return new OkObjectResult(parameters.appId + "ha");
         }
     }
 }
