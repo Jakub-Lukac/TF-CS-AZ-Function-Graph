@@ -12,18 +12,18 @@ using Microsoft.Azure.Functions.Worker;
 
 namespace AZ_Fn_Graph
 {
-    public class GraphFunction
+    public class GraphGetUser
     {
         private readonly Code _code;
         private readonly ILogger _logger;
 
-        public GraphFunction(Code code, ILogger<GraphFunction> logger)
+        public GraphGetUser(Code code, ILogger<GraphGetUser> logger)
         {
             _logger = logger;
             _code = code;
         }
 
-        [Function("GraphFunction")]
+        [Function("GraphGetUser")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "default")] HttpRequest req)
         {
