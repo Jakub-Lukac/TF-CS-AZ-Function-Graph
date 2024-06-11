@@ -1,9 +1,9 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34616.47
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AZ-Fn-Graph", "AZ-Fn-Graph.csproj", "{14F63EC6-0D0D-44E7-BA03-6BD3281A55D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AZ-Fn-Graph", "AZ-Fn-Graph.csproj", "{14F63EC6-0D0D-44E7-BA03-6BD3281A55D1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
