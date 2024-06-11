@@ -34,14 +34,31 @@ namespace AZ_Fn_Graph
 
             var users = await _code.GetUsers(graphClient, "08368be9-8784-4ddd-ac0e-13fc40fe5ccb");
 
-            StringBuilder responseMessage = new StringBuilder();
+            /*StringBuilder responseMessage = new StringBuilder();
 
             foreach (var u in users)
             {
                 responseMessage.AppendLine($"{u.Id, -20}{u.DisplayName}");
+            }*/
+
+            StringBuilder responseMessage = new StringBuilder();
+            responseMessage.AppendLine("<html><body><table border='1'>");
+            responseMessage.AppendLine("<tr><th>User ID</th><th>Display Name</th></tr>");
+
+            foreach (var u in users)
+            {
+                responseMessage.AppendLine($"<tr><td>{u.Id}</td><td>{u.DisplayName}</td></tr>");
             }
 
-            return new OkObjectResult(responseMessage.ToString());
+            responseMessage.AppendLine("</table></body></html>");
+
+            return new ContentResult
+            {
+                Content = responseMessage.ToString(),
+                ContentType = "text/html"
+            };
+
+            //return new OkObjectResult(responseMessage.ToString());
         }
     }
 }
