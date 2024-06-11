@@ -14,19 +14,18 @@ namespace AZ_Fn_Graph
 {
     public class GraphGetUser
     {
-        /*private readonly ILogger _logger;
-        private readonly Code _code;
+        private readonly ILogger _logger;
+        //private readonly Code _code;
 
-        public GraphGetUser(ILogger<GraphGetUser> logger, Code code)
+        public GraphGetUser(ILogger<GraphGetUser> logger)
         {
             _logger = logger;
-            _code = code;
-        }*/
+        }
         [FunctionName("GraphGetUser")]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "default")] HttpRequest req, ILogger log)
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "default")] HttpRequest req)
         {
-            log.LogInformation($"C# HTTP trigger function processed a request");
+            _logger.LogInformation($"C# HTTP trigger function processed a request");
 
             /*var parameters = new ParameterObjectBody();
 
