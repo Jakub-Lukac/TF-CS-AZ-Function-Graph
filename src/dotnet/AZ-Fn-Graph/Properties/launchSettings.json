@@ -2,7 +2,7 @@
   "profiles": {
     "AZ_Fn_Graph": {
       "commandName": "Project",
-      "commandLineArgs": "--port 7027",
+      "commandLineArgs": "--port 7006",
       "launchBrowser": false
     }
   }
