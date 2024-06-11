@@ -49,3 +49,4 @@ resource "azurerm_key_vault_access_policy" "akv_fn_policy" {
     "List"
   ]
 }
+
