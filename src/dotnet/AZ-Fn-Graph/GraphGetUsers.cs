@@ -16,7 +16,7 @@ namespace AZ_Fn_Graph
         private readonly Code _code;
         private readonly ILogger _logger;
 
-        public GraphGetUsers(Code code, ILogger<GraphGetUser> logger)
+        public GraphGetUsers(Code code, ILogger<GraphGetUsers> logger)
         {
             _logger = logger;
             _code = code;
@@ -41,7 +41,7 @@ namespace AZ_Fn_Graph
                 responseMessage.AppendLine($"{u.Id, -20}{u.DisplayName}");
             }
 
-            return new OkObjectResult(responseMessage);
+            return new OkObjectResult(responseMessage.ToString());
         }
     }
 }
