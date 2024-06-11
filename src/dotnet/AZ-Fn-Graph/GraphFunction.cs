@@ -12,12 +12,18 @@ namespace AZ_Fn_Graph
 {
     public class GraphFunction
     {
+        private readonly ILogger _logger;
+
+        public GraphFunction(ILogger<GraphFunction> logger)
+        {
+            _logger = logger;
+        }
+
         [FunctionName("GraphFunction")]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "default")] HttpRequest req,
-            ILogger log)
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "default")] HttpRequest req)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
+            _logger.LogInformation("C# HTTP trigger function processed a request.");
 
             string name = req.Query["name"];
 
