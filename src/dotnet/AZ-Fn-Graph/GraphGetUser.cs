@@ -12,7 +12,7 @@ using System.Text;
 
 namespace AZ_Fn_Graph
 {
-    public static class GraphGetUser
+    public class GraphGetUser
     {
         /*private readonly ILogger _logger;
         private readonly Code _code;
@@ -23,7 +23,7 @@ namespace AZ_Fn_Graph
             _code = code;
         }*/
         [FunctionName("GraphGetUser")]
-        public static async Task<IActionResult> Run(
+        public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "default")] HttpRequest req, ILogger log)
         {
             log.LogInformation($"C# HTTP trigger function processed a request");

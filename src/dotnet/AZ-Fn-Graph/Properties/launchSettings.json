@@ -2,11 +2,7 @@
   "profiles": {
     "AZ_Fn_Graph": {
       "commandName": "Project",
-      "commandLineArgs": "--port 7218",
-      "environmentVariables": {
-        "CONF_APP_SECRET": "lBb8Q~BGeeR5UY4lUsFVNf3MWzleidzGhKORwaFh",
-        "CONF_TENANT_ID": "30b63a6d-92e7-4db7-bc45-0d5dd3b77339"
-      }
+      "commandLineArgs": "--port 7218"
     }
   }
 }
