@@ -42,6 +42,11 @@ namespace AZ_Fn_Graph
                 responseMessage.AppendLine(user.DisplayName);
             }*/
 
+            // e11.. - GraphTest app, run only when static keywords is used
+            // takes local environment variable not the one from the azure portal
+
+            // try to remove local conf_app_id and run the code, what will be the output
+            // trouble shoot the static keyword, if it is needed, if no then the problem is with Graph Authentication
             string appId = Environment.GetEnvironmentVariable("CONF_APP_ID");
 
             return new OkObjectResult(appId);
