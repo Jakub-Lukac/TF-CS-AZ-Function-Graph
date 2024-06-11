@@ -14,7 +14,7 @@ namespace AZ_Fn_Graph
 {
     public class GraphGetUser
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<GraphGetUser> _logger;
         //private readonly Code _code;
 
         public GraphGetUser(ILogger<GraphGetUser> logger)
