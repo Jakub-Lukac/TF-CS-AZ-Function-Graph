@@ -130,5 +130,53 @@ namespace AZ_Fn_Graph.Helpers
                 return new OkObjectResult("Error occured when sending an email.");
             }
         }
+
+        public async Task SendMail(GraphServiceClient graphServiceClient, string recipientEmail, string name, string content)
+        {
+            var requestBody = new SendMailPostRequestBody
+            {
+                Message = new Message
+                {
+                    Subject = $"New Blob added {name}",
+                    Body = new ItemBody
+                    {
+                        ContentType = BodyType.Text,
+                        Content = $"Blob content : \n{content}",
+                    },
+                    ToRecipients = new List<Recipient>
+                    {
+                        new Recipient
+                        {
+                            EmailAddress = new EmailAddress
+                            {
+                                Address = recipientEmail,
+                            },
+                        },
+                    },
+                    // cc - copy of the message
+                    /*CcRecipients = new List<Recipient>
+                    {
+                        new Recipient
+                        {
+                            EmailAddress = new EmailAddress
+                            {
+                                Address = "danas@contoso.com",
+                            },
+                        },
+                    },*/
+                },
+                SaveToSentItems = false,
+            };
+
+            try
+            {
+                await graphServiceClient.Users["882b4e47-a1ba-4b54-8556-a85f852a0aa7"].SendMail.PostAsync(requestBody);
+                Debug.WriteLine("Email sent succesfully.");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error occured when sending an email. The error message : {ex.Message}");
+            }
+        }
     }
 }
