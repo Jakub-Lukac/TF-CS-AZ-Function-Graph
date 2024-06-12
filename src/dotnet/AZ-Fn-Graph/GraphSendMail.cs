@@ -19,7 +19,7 @@ namespace AZ_Fn_Graph
         }
 
         [Function("GraphSendMail")]
-        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequest req)
+        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "post", Route = "mail")] HttpRequest req)
         {
             _logger.LogInformation("C# HTTP POST function executed.");
 
