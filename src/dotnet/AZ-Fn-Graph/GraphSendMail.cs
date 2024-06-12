@@ -27,7 +27,7 @@ namespace AZ_Fn_Graph
 
             var graphClient = _code.GetAuthenticatedGraphClient(parameters.tenantId, parameters.appId, parameters.appSecret);
 
-            return await _code.SendMail(graphClient, "AlexW@M365x25212640.OnMicrosoft.com");
+            return await _code.SendMail(graphClient, "ChristieC@M365x25212640.OnMicrosoft.com");
         }
     }
 }
