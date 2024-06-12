@@ -1,6 +1,8 @@
 ﻿using Azure.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Graph;
 using Microsoft.Graph.Models;
+using Microsoft.Graph.Users.Item.SendMail;
 using Microsoft.Kiota.Abstractions;
 using System;
 using System.Collections.Generic;
@@ -77,6 +79,55 @@ namespace AZ_Fn_Graph.Helpers
             {
                 Debug.WriteLine(ex.Message);
                 return new List<User>();
+            }
+        }
+
+        public async Task<OkObjectResult> SendMail(GraphServiceClient graphServiceClient, string recipientEmail)
+        {
+            var requestBody = new SendMailPostRequestBody
+            {
+                Message = new Message
+                {
+                    Subject = "Exam results",
+                    Body = new ItemBody
+                    {
+                        ContentType = BodyType.Text,
+                        Content = "Hi, the exams results are up.",
+                    },
+                    ToRecipients = new List<Recipient>
+                    {
+                        new Recipient
+                        {
+                            EmailAddress = new EmailAddress
+                            {
+                                Address = recipientEmail,
+                            },
+                        },
+                    },
+                    // cc - copy of the message
+                    /*CcRecipients = new List<Recipient>
+                    {
+                        new Recipient
+                        {
+                            EmailAddress = new EmailAddress
+                            {
+                                Address = "danas@contoso.com",
+                            },
+                        },
+                    },*/
+                },
+                SaveToSentItems = false,
+            };
+
+            try
+            {
+                await graphServiceClient.Users["882b4e47-a1ba-4b54-8556-a85f852a0aa7"].SendMail.PostAsync(requestBody);
+                return new OkObjectResult("Email sent successfully");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return new OkObjectResult("Error occured when sending an email.");
             }
         }
     }
