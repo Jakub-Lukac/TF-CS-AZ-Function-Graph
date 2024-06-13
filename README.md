@@ -95,7 +95,7 @@ If there is no error reported, run the `apply` command to deploy the solution fo
 terraform apply "plan_customer.out"
 ```
 
-# CI/CD pipeline Set Up
+# CI/CD pipeline Setup
 
 ## GitHub Variables and Secrets
 Navigate to your repository, go to Settings -> Secrets and Variables -> Actions.
@@ -105,13 +105,59 @@ In here create secrets **ARM_CLIENT_SECRET** and **BACKEND_ACCESS_KEY**</br>
 ARM_CLIENT_SECRET is represented in var.tf file by the env_client_secret variable.]
 
 ### Variables
-**Important to note**, like client secret, app ID, tenant ID, subscription ID, **MUST** start with phrase **ARM**</br>
-ARM_CLIENT_ID</br>
-ARM_SUBSCRIPTION_ID</br>
-ARM_TENANT_ID</br>
 
-**From the backend.conf file**</br>
-BACKEND_RESOURCE_GROUP_NAME</br>
-BACKEND_STORAGE_ACCOUNT_NAME</br>
-BACKEND_STORAGE_CONTAINER_NAME</br>
+**Important to note**, like client secret, app ID, tenant ID, subscription ID, **MUST** start with phrase **ARM**
+```text
+ARM_CLIENT_ID
+ARM_SUBSCRIPTION_ID
+ARM_TENANT_ID
+```
+
+**Populate the values from the backend.conf file**
+```text
+BACKEND_RESOURCE_GROUP_NAME
+BACKEND_STORAGE_ACCOUNT_NAME
+BACKEND_STORAGE_CONTAINER_NAME
 TF_BACKEND_KEY</br>
+```
+
+# Azure Function Setup
+
+## Creating Azure Function
+In Visual Studio create Azure Function with HTTP Trigger for starters. Select the .NET 6.0 template. Right after creation upgrade the azure function to .NET 8 version. Right click on your azure function and hit Upgrade. Follow the instructions in this offical article https://learn.microsoft.com/en-us/azure/azure-functions/dotnet-isolated-process-guide?tabs=windows</br>
+
+After upgrade run the Program.cs is automatically created. If you want to include Logging, App Insights, and Dependency Injections in your project use the following code snippet for your Program.cs file
+
+```text
+using Microsoft.Extensions.Hosting;
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using System.Linq;
+using AZ_Fn_Graph.Helpers;
+
+var host = new HostBuilder()
+    .ConfigureFunctionsWebApplication()
+    .ConfigureServices(services => {
+        services.AddApplicationInsightsTelemetryWorkerService();
+        services.ConfigureFunctionsApplicationInsights();
+        services.AddSingleton<Code>();
+    })
+    .ConfigureLogging(logging =>
+    {
+        logging.Services.Configure<LoggerFilterOptions>(options =>
+        {
+            LoggerFilterRule defaultRule = options.Rules.FirstOrDefault(rule => rule.ProviderName
+                == "Microsoft.Extensions.Logging.ApplicationInsights.ApplicationInsightsLoggerProvider");
+            if (defaultRule is not null)
+            {
+                options.Rules.Remove(defaultRule);
+            }
+        });
+    })
+    .Build();
+
+host.Run();
+```
+
+## NuGet Packages
