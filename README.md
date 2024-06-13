@@ -161,3 +161,16 @@ host.Run();
 ```
 
 ## NuGet Packages
+
+Download the following packages 
+```text
+Azure.Identity
+Microsoft.ApplicationInsights.WorkerService
+Microsoft.Azure.Functions.Extensions
+Microsoft.Azure.Functions.Worker
+Microsoft.Azure.Functions.Worker.Sdk
+Microsoft.Azure.Functions.Worker.ApplicationInsights
+Microsoft.Azure.Functions.Worker.Extensions.Http
+Microsoft.Azure.Functions.Worker.Extensions.Http.AspNetCore
+Microsoft.Graph
+```
