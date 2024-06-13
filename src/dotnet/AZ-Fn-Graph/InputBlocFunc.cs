@@ -1,14 +1,8 @@
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using AZ_Fn_Graph.Helpers;
-using System.Diagnostics;
-using System.Reflection.Metadata;
-using Microsoft.Azure.Functions.Worker;
-using System.Text;
 using System.IO;
+using System.Threading.Tasks;
+using AZ_Fn_Graph.Helpers;
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.Extensions.Logging;
 
 namespace AZ_Fn_Graph
 {
@@ -17,7 +11,7 @@ namespace AZ_Fn_Graph
         private readonly ILogger<InputBlocFunc> _logger;
         private readonly Code _code;
 
-        public InputBlocFunc(ILogger<InputBlocFunc> logger, Code code)
+        public InputBlocFunc(ILogger<InputBlocFunc> logger , Code code)
         {
             _logger = logger;
             _code = code;
@@ -31,8 +25,10 @@ namespace AZ_Fn_Graph
             _logger.LogInformation($"C# Blob trigger function Processed blob\n Name: {name} \n Data: {content}");
 
             var parameters = new Model();
+
             var graphClient = _code.GetAuthenticatedGraphClient(parameters.tenantId, parameters.appId, parameters.appSecret);
-            await _code.SendMail(graphClient, "ChristieC@M365x25212640.OnMicrosoft.com", name, content);
+
+            await _code.SendMail(graphClient, "ChristieC@M365x25212640.OnMicrosoft.com", name, content, _logger);
         }
     }
 }

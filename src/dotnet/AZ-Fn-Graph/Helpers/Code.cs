@@ -1,5 +1,6 @@
 ﻿using Azure.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
 using Microsoft.Graph.Models;
 using Microsoft.Graph.Users.Item.SendMail;
@@ -82,7 +83,7 @@ namespace AZ_Fn_Graph.Helpers
             }
         }
 
-        public async Task<OkObjectResult> SendMail(GraphServiceClient graphServiceClient, string recipientEmail)
+        public async Task SendMail(GraphServiceClient graphServiceClient, string recipientEmail, ILogger logger)
         {
             var requestBody = new SendMailPostRequestBody
             {
@@ -122,16 +123,16 @@ namespace AZ_Fn_Graph.Helpers
             try
             {
                 await graphServiceClient.Users["882b4e47-a1ba-4b54-8556-a85f852a0aa7"].SendMail.PostAsync(requestBody);
-                return new OkObjectResult("Email sent successfully");
+                logger.LogInformation("Email sent successfully");
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                return new OkObjectResult("Error occured when sending an email.");
+                logger.LogInformation("Error occured when sending an email.");
             }
         }
 
-        public async Task SendMail(GraphServiceClient graphServiceClient, string recipientEmail, string name, string content)
+        public async Task SendMail(GraphServiceClient graphServiceClient, string recipientEmail, string name, string content, ILogger logger)
         {
             var requestBody = new SendMailPostRequestBody
             {
@@ -171,12 +172,53 @@ namespace AZ_Fn_Graph.Helpers
             try
             {
                 await graphServiceClient.Users["882b4e47-a1ba-4b54-8556-a85f852a0aa7"].SendMail.PostAsync(requestBody);
-                Debug.WriteLine("Email sent succesfully.");
+                logger.LogInformation("Email sent succesfully.");
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error occured when sending an email. The error message : {ex.Message}");
+                logger.LogInformation($"Error occured when sending an email. The error message : {ex.Message}");
             }
+        }
+        public async Task CreateUser(GraphServiceClient graphServiceClient, ILogger logger)
+        {
+            var requestBody = new User
+            {
+                AccountEnabled = true,
+                City = "Seattle",
+                Country = "United States",
+                Department = "Sales & Marketing",
+                DisplayName = "Melissa Darrow",
+                GivenName = "Melissa",
+                JobTitle = "Marketing Director",
+                MailNickname = "MelissaD",
+                PasswordPolicies = "DisablePasswordExpiration",
+                PasswordProfile = new PasswordProfile
+                {
+                    Password = "b5d09338-0d26-c93d-9b5a-7a20c4686aa8",
+                    ForceChangePasswordNextSignIn = false,
+                },
+                OfficeLocation = "131/1105",
+                PostalCode = "98052",
+                PreferredLanguage = "en-US",
+                State = "WA",
+                StreetAddress = "9256 Towne Center Dr., Suite 400",
+                Surname = "Darrow",
+                MobilePhone = "+1 206 555 0110",
+                UsageLocation = "US",
+                UserPrincipalName = "MelissaD@M365x25212640.OnMicrosoft.com",
+            };
+
+            try
+            {
+                var result = await graphServiceClient.Users.PostAsync(requestBody);
+                logger.LogInformation("User successfully created.");
+            }
+            catch (Exception ex)
+            {
+                logger.LogInformation("Failed to create a user.");
+                Debug.WriteLine(ex.Message);
+            }
+            
         }
     }
 }

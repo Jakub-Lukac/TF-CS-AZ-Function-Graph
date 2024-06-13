@@ -19,7 +19,7 @@ namespace AZ_Fn_Graph
         }
 
         [Function("GraphSendMail")]
-        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "post", Route = "mail")] HttpRequest req)
+        public async Task Run([HttpTrigger(AuthorizationLevel.Function, "post", Route = "mail")] HttpRequest req)
         {
             _logger.LogInformation("C# HTTP POST function executed.");
 
@@ -27,7 +27,7 @@ namespace AZ_Fn_Graph
 
             var graphClient = _code.GetAuthenticatedGraphClient(parameters.tenantId, parameters.appId, parameters.appSecret);
 
-            return await _code.SendMail(graphClient, "ChristieC@M365x25212640.OnMicrosoft.com");
+            await _code.SendMail(graphClient, "ChristieC@M365x25212640.OnMicrosoft.com", _logger);
         }
     }
 }
