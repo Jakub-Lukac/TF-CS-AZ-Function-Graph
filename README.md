@@ -124,9 +124,9 @@ TF_BACKEND_KEY</br>
 # Azure Function Setup
 
 ## Creating Azure Function
-In Visual Studio create Azure Function with HTTP Trigger for starters. Select the .NET 6.0 template. Right after creation upgrade the azure function to .NET 8 version. Right click on your azure function and hit Upgrade. Follow the instructions in this offical article https://learn.microsoft.com/en-us/azure/azure-functions/dotnet-isolated-process-guide?tabs=windows</br>
+In Visual Studio create Azure Function with HTTP Trigger for starters. Select the .NET 6.0 template. Right after creation upgrade the azure function to .NET 8 version. Right-click on your Azure function and hit Upgrade. Follow the instructions in this official article https://learn.microsoft.com/en-us/azure/azure-functions/dotnet-isolated-process-guide?tabs=windows</br>
 
-After upgrade run the Program.cs is automatically created. If you want to include Logging, App Insights, and Dependency Injections in your project use the following code snippet for your Program.cs file
+After the upgrade run the Program.cs is automatically created. If you want to include Logging, App Insights, and Dependency Injections in your project use the following code snippet for your Program.cs file
 
 ```text
 using Microsoft.Extensions.Hosting;
