@@ -1,19 +1,22 @@
 # Deployment of C# Azure function using Terraform
 
-## Project Overview 
+## Project Overview
+
 This project leverages Terraform as Infrastructure as Code (IaC) to deploy Azure resources, including a Windows Function App autonomously. A GitHub Actions pipeline is used to manage the CI/CD process. The Azure Function consists of multiple functions with different triggers (HTTP, Blob, Timer). The Graph API is implemented as a core component of these functions.
 
 # Terraform Setup
 
 ## Terraform service principal Setup
+
 To run this code, you need to get an Azure Subscription ID. Run the az login command to get a list of available subscriptions.
 
 To create a Terraform service principal, go to portal.azure.com open up the cloud power shell, and run the following command:
+
 ```text
 az ad sp create-for-rbac -n GraphApp-Test-Terraform --role="Contributor" --scopes="/subscriptions/{your-subcription-id}"
 ```
 
-From the command output, note the `appId` value and `password` and store them in var.tf file for **the time being.** Note them as `env_` variables together with *subscription_id* and *tenant_id*.
+From the command output, note the `appId` value and `password` and store them in var.tf file for **the time being.** Note them as `env_` variables together with _subscription_id_ and _tenant_id_.
 
 ```text
 {
@@ -47,6 +50,7 @@ variable "subscription_id" {
 ```
 
 ## Before run Terraform
+
 Terraform uses Azure AD Application to run commands. For creating new resources, **GraphApp-Test-Terraform** Application needs API Permissions as follows:
 
 ```text
@@ -86,7 +90,7 @@ Create an environment for `customer`
 ```text
 terraform workspace new customer
 terraform workspace select customer
-terraform plan -out="plan_customer.out" 
+terraform plan -out="plan_customer.out"
 ```
 
 If there is no error reported, run the `apply` command to deploy the solution for the customer.
@@ -98,15 +102,18 @@ terraform apply "plan_customer.out"
 # CI/CD pipeline Setup
 
 ## GitHub Variables and Secrets
+
 Navigate to your repository, go to Settings -> Secrets and Variables -> Actions.
 
 ### Secrets
+
 In here create secrets **ARM_CLIENT_SECRET** and **BACKEND_ACCESS_KEY**</br>
 ARM_CLIENT_SECRET is represented in var.tf file by the env_client_secret variable.]
 
 ### Variables
 
 **Important to note**, like client secret, app ID, tenant ID, subscription ID, **MUST** start with phrase **ARM**
+
 ```text
 ARM_CLIENT_ID
 ARM_SUBSCRIPTION_ID
@@ -114,6 +121,7 @@ ARM_TENANT_ID
 ```
 
 **Populate the values from the backend.conf file**
+
 ```text
 BACKEND_RESOURCE_GROUP_NAME
 BACKEND_STORAGE_ACCOUNT_NAME
@@ -124,6 +132,7 @@ TF_BACKEND_KEY</br>
 # Azure Function Setup
 
 ## Creating Azure Function
+
 In Visual Studio create Azure Function with HTTP Trigger for starters. Select the .NET 6.0 template. Right after creation upgrade the azure function to .NET 8 version. Right-click on your Azure function and hit Upgrade. Follow the instructions in this official article https://learn.microsoft.com/en-us/azure/azure-functions/dotnet-isolated-process-guide?tabs=windows</br>
 
 After the upgrade run the Program.cs is automatically created. If you want to include Logging, App Insights, and Dependency Injections in your project use the following code snippet for your Program.cs file
@@ -162,7 +171,8 @@ host.Run();
 
 ## NuGet Packages
 
-Download the following packages 
+Download the following packages
+
 ```text
 Azure.Identity
 Microsoft.ApplicationInsights.WorkerService
