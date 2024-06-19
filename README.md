@@ -108,7 +108,7 @@ Navigate to your repository, go to Settings -> Secrets and Variables -> Actions.
 ### Secrets
 
 In here create secrets **ARM_CLIENT_SECRET** and **BACKEND_ACCESS_KEY**</br>
-ARM_CLIENT_SECRET is represented in var.tf file by the env_client_secret variable.]
+ARM_CLIENT_SECRET is represented in var.tf file by the env_client_secret variable.
 
 ### Variables
 
@@ -126,7 +126,7 @@ ARM_TENANT_ID
 BACKEND_RESOURCE_GROUP_NAME
 BACKEND_STORAGE_ACCOUNT_NAME
 BACKEND_STORAGE_CONTAINER_NAME
-TF_BACKEND_KEY</br>
+TF_BACKEND_KEY
 ```
 
 # Azure Function Setup
