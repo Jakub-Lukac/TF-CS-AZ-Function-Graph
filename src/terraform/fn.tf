@@ -34,7 +34,6 @@ resource "azurerm_windows_function_app" "fn" {
     identity_ids = [azurerm_user_assigned_identity.functions.id]
   }
 
-
   site_config {
     application_stack {
       dotnet_version              = "v8.0"
